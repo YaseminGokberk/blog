@@ -7,16 +7,17 @@ use Yii;
 /**
  * This is the model class for table "blog".
  *
- * @property integer $id
+ * @property int $id
  * @property string $title
  * @property string $description
- * @property string $picture
- *
- * @property data[] $data
+ * @property string $body
+ * @property string $created_at
+ * @property string $created_by
+ * @property string $updated_at
+ * @property string $updated_by
  */
 class Blog extends \yii\db\ActiveRecord
 {
-
     /**
      * @inheritdoc
      */
@@ -31,9 +32,9 @@ class Blog extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'description'], 'required'],
-            [['description', 'picture'], 'string'],
-            [['title'], 'string', 'max' => 200],
+            [['title', 'description', 'body', 'created_by', 'updated_by'], 'required'],
+            [['created_at', 'updated_at'], 'safe'],
+            [['title', 'description', 'body', 'created_by', 'updated_by'], 'string', 'max' => 255],
         ];
     }
 
@@ -46,26 +47,11 @@ class Blog extends \yii\db\ActiveRecord
             'id' => 'ID',
             'title' => 'Title',
             'description' => 'Description',
-            'picture' => 'Picture',
             'body' => 'Body',
-            'created_at' =>'Created At',
-            'created_by' =>'Created By',
+            'created_at' => 'Created At',
+            'created_by' => 'Created By',
             'updated_at' => 'Updated At',
             'updated_by' => 'Updated By',
-            'category_id' => 'Category Id',
-            'category' => 'Category'
         ];
-    }
-
-    public function getImagePath(){
-        return sprintf("%s/blog/%s",Yii::getAlias ( '@data' ),$this->picture);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getData()
-    {
-        return $this->hasMany(BlogData::className(), ['blog_id' => 'id']);
     }
 }

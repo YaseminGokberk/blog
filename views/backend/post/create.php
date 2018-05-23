@@ -4,16 +4,16 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model kouosl\blog\models\Blog */
+/* @var $model kouosl\blog\models\Post */
 
-$this->title = 'Create Blog';
-$this->params['breadcrumbs'][] = ['label' => 'Blogs', 'url' => ['index']];
+$this->title = 'Create Post';
+$this->params['breadcrumbs'][] = ['label' => 'Posts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="blog-create">
+<div class="post-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+    <?php $model->blog_id = Yii::$app->session['viewPostId']; ?>
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>

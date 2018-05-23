@@ -3,17 +3,17 @@
 namespace kouosl\blog\controllers\backend;
 
 use Yii;
-use kouosl\blog\models\Blog;
-use kouosl\blog\models\BlogSearch;
+use kouosl\blog\models\Post;
+use kouosl\blog\models\PostSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 
 /**
- * BlogController implements the CRUD actions for Blog model.
+ * PostController implements the CRUD actions for Post model.
  */
-class BlogController extends Controller
+class PostController extends Controller
 {
     /**
      * @inheritdoc
@@ -31,46 +31,54 @@ class BlogController extends Controller
     }
 
     /**
-     * Lists all Blog models.
+     * Lists all Post models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new BlogSearch();
+        $dataProvider = new ActiveDataProvider();
+        $searchModel = new PostSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        if (isset(Yii::$app->session['viewPostId'])) {
+            $param = Yii::$app->session['viewPostId'];
+            $dataProvider->query->andFilterWhere(['blog_id'=>$param]);
+
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'id' => $param,
+            ]);
+         } else {
+            $param = null;
+            $this->redirect(array('/blog/blog'));
+         }
     }
 
     /**
-     * Displays a single Blog model.
+     * Displays a single Post model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        if (!Yii::$app->session->getIsActive()) {
-            Yii::$app->session->open();
-        }
-        Yii::$app->session['viewPostId'] = $id;
-        Yii::$app->session->close();
-        $this->redirect(array('/blog/post'));
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
     }
 
     /**
-     * Creates a new Blog model.
+     * Creates a new Post model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Blog();
+        $model = new Post();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -80,7 +88,7 @@ class BlogController extends Controller
     }
 
     /**
-     * Updates an existing Blog model.
+     * Updates an existing Post model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -100,7 +108,7 @@ class BlogController extends Controller
     }
 
     /**
-     * Deletes an existing Blog model.
+     * Deletes an existing Post model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -114,15 +122,15 @@ class BlogController extends Controller
     }
 
     /**
-     * Finds the Blog model based on its primary key value.
+     * Finds the Post model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Blog the loaded model
+     * @return Post the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Blog::findOne($id)) !== null) {
+        if (($model = Post::findOne($id)) !== null) {
             return $model;
         }
 

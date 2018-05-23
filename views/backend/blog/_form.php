@@ -1,16 +1,31 @@
 <?php
 
-use kouosl\theme\helpers\Html;
-use kouosl\theme\widgets\ActiveForm;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
-$data['titlePage']	    = $title;
-$form                   = ActiveForm::begin(['id' => 'form-create','class'=>'horizontal-form']);
-$data['title'] 			= $form->field($model, 'title')->textInput();
-$data['description']	= $form->field($model, 'description')->textArea(['rows' => 8]);
-$data['imageFile']      = $form->field($uploadImage, 'imageFile')->fileInput();
-$data['button'] 	    = Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => 'btn btn-primary']);
+/* @var $this yii\web\View */
+/* @var $model kouosl\blog\models\Blog */
+/* @var $form yii\widgets\ActiveForm */
+?>
 
+<div class="blog-form">
 
-echo $this->render('form', $data);
+    <?php $form = ActiveForm::begin(); ?>
 
-ActiveForm::end();
+    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'body')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'created_by')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'updated_by')->textInput(['maxlength' => true]) ?>
+
+    <div class="form-group">
+        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+    </div>
+
+    <?php ActiveForm::end(); ?>
+
+</div>

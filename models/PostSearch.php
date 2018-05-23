@@ -5,12 +5,12 @@ namespace kouosl\blog\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use kouosl\blog\models\Blog;
+use kouosl\blog\models\Post;
 
 /**
- * BlogSearch represents the model behind the search form of `kouosl\blog\models\Blog`.
+ * PostSearch represents the model behind the search form of `kouosl\blog\models\Post`.
  */
-class BlogSearch extends Blog
+class PostSearch extends Post
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class BlogSearch extends Blog
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['title', 'description', 'body', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'safe'],
+            [['id', 'blog_id'], 'integer'],
+            [['category'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class BlogSearch extends Blog
      */
     public function search($params)
     {
-        $query = Blog::find();
+        $query = Post::find();
 
         // add conditions that should always apply here
 
@@ -60,15 +60,10 @@ class BlogSearch extends Blog
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'blog_id' => $this->blog_id,
         ]);
 
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'description', $this->description])
-            ->andFilterWhere(['like', 'body', $this->body])
-            ->andFilterWhere(['like', 'created_by', $this->created_by])
-            ->andFilterWhere(['like', 'updated_by', $this->updated_by]);
+        $query->andFilterWhere(['like', 'category', $this->category]);
 
         return $dataProvider;
     }

@@ -10,5 +10,5 @@ class DefaultController extends \kouosl\base\controllers\backend\BaseController
         return $this->render('_index');
     }
 
- 
+    
 }
